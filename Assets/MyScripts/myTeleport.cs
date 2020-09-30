@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,11 @@ public class myTeleport : MonoBehaviour
     [SerializeField]
     float timer = 2f;
 
-    public List<GameObject> teleplace = new List<GameObject>();
+
+    RaycastHit hit;
+    Ray ray;
+
+
 
     private void Update()
     {
@@ -21,12 +26,16 @@ public class myTeleport : MonoBehaviour
         times += Time.deltaTime;
             Reticle.fillAmount = times / timer;
         }
+
+        ray = Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f));
         
-        if(Reticle.fillAmount == 1)
+        if(Physics.Raycast(ray,out hit,3243f))
         {
-            foreach( GameObject obj in teleplace )
+           // Debug.Log(hit.transform.gameObject.name);
+            if(/*hit.transform.CompareTag("Tele1") && */Reticle.fillAmount == 1)
             {
-                transform.position = obj.transform.position;
+                //  GameObject.Find("Portals").GetComponent<TeleportPlayer>().ToTeleport(hit.transform.gameObject.name);
+                hit.transform.gameObject.AddComponent<TeleportPlayer>().ToTeleport();
             }
         }
     }
